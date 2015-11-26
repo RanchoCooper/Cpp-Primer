@@ -1,0 +1,46 @@
+/* 
+**  @author rancho
+**  @email  rancho941110@gmail.com
+**  @time   2015-11-07 15:25:19
+**  
+**  @status  solved
+**  @brief
+**  
+**/
+
+#ifndef CP5_ex13_27_h
+#define CP5_ex13_27_h
+
+#include <string>
+
+class HasPtr {
+public:
+    HasPtr(const std::string &s = std::string()) : ps(new std::string(s)), i(0), use(new size_t(1)) { }
+    HasPtr(const HasPtr &hp) : ps(hp.ps), i(hp.i), use(hp.use) { ++*use; }
+
+    // `a = b` 
+    HasPtr& operator=(const HasPtr &rhs) {
+        ++*rhs.use;
+        if (--*use == 0) {
+            delete ps;
+            delete use;
+        }
+        ps = rhs.ps;
+        i = rhs.i;
+        use = rhs.use;
+        return *this;
+    }
+
+    ~HasPtr() {
+        if (--*use == 0) {
+            delete ps;
+            delete use;
+        }
+    }
+private:
+    std::string *ps;  // points to a dynamical memory
+    int i;
+    size_t *use;      // reference count
+};
+
+#endif
